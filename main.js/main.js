@@ -1,4 +1,4 @@
-/* funktionen återställer sysslorna i alla listorna vid tryckning av "återställ" knappen.
+/* den här funktionen återställer sysslorna i alla listorna vid tryckning av "återställ" knappen.
 Plus meddelar användaren att den är återställd och ger en klapp på axeln*/
 document.getElementById("restore").addEventListener("click", function () {
   document.getElementById("todoList").innerHTML = "";
@@ -7,83 +7,70 @@ document.getElementById("restore").addEventListener("click", function () {
     "Listan är nu återställd, bra jobbat med dina sysslor 💪.";
 });
 
-// Eventlistener är för "Spara" knappen, den lägger till en ny syssla vid tryck.
+// denna är för "Spara" knappen, den lägger till en ny syssla vid tryck.
 document.getElementById("saveBtn").addEventListener("click", function () {
-  // Hämtar värdet från inputfältet
   let chore = document.getElementById("List").value;
   let alertmessege = document.getElementById("alertmessege");
 
   //Kontrollerar så inte sysslan är tom, annars får man felmeddelande
   if (chore.trim() !== "") {
-    alertmessege.innerHTML = ""; //Tömmer tidigare meddelande
-    createTodoList(chore); //Skapa en ny syssla i listan
-    document.getElementById("List").value = ""; //Rensar input fältet
+    alertmessege.innerHTML = "";
+    createTodoList(chore);
+    document.getElementById("List").value = "";
   } else {
-    alertmessege.innerHTML = "Vänligen skriv in en syssla"; // Denna felmeddelande dyker upp om input är tom
+    alertmessege.innerHTML = "Vänligen skriv in en syssla";
   }
 });
 
-// funktionen skapar en ny syssla i "Att göra" lista.
+// funktionen skapar en ny syssla.
 function createTodoList(text) {
-  //container håller i sysslan och knapparna
   let itemContainer = document.createElement("div");
   itemContainer.classList.add("todays-mission");
 
   // skapar en inputfält för sysslan
+  // rad 36 låser fältet så att den inte går och redigera
   let choreInput = document.createElement("input");
   choreInput.type = "text";
   choreInput.value = text;
-  choreInput.setAttribute("readonly", true); // Låser fältet så att den inte går och redigera
+  choreInput.setAttribute("readonly", true);
   choreInput.placeholder = "Syssla";
   choreInput.classList.add("chore-input");
 
-  // Skapar en "Ändra" knapp
+  // Skapar en "Ändra" knappen, för att kunna redigera en syssla man sparat, eller utfört. med evventlisener som låser upp för och redigera syssla samt en if statement för att knappen ska ändra form.
   let editBtn = document.createElement("button");
   editBtn.textContent = "Ändra";
   editBtn.classList.add("changeBtn");
-
-  //Skapar "markera som klar" knapp
-  let doneBtn = document.createElement("button");
-  doneBtn.textContent = "Markera som klar";
-  doneBtn.classList.add("doneBtn");
-
-  //skapar "radera" knapp
-  let deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "Radera";
-  deleteBtn.classList.add("delete");
-
-  // Den här eventlistener är för att låsa upp samt redigera sysslan
   editBtn.addEventListener("click", function () {
-    // om fältet är klar så ska man kunna redigera och "ändra" knappen ska heta "spara"
     if (choreInput.hasAttribute("readonly")) {
       choreInput.removeAttribute("readonly");
-      choreInput.focus(); // den här focuserar på fältet för redigering
+      choreInput.focus();
       editBtn.textContent = "Spara";
     } else {
-      // ändrar knappen från "spara" till "ändra" när fältet är redigerad och sparad
       choreInput.setAttribute("readonly", true);
-      editBtn.textContent = "Ändra";
+      this.textContent = "Ändra";
     }
   });
 
-  // Markera sysslan som klar
+  //Skapar en knapp som man kan klicka på när man är klar med sin syssla, med en listener som talar om vad knappen ska göra.
+  let doneBtn = document.createElement("button");
+  doneBtn.textContent = "Markera som klar";
+  doneBtn.classList.add("doneBtn");
   doneBtn.addEventListener("click", function () {
-    // flytta sysslan till "Färdig stälda" listan
     document.getElementById("doneList").appendChild(itemContainer);
-    doneBtn.remove();
+    this.remove();
   });
 
-  // Radera sysslan
+  //skapar en knapp för och radera en syssla, listener gör samma som rad 60 (säger vad knappen ska göra)
+  let deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Radera";
+  deleteBtn.classList.add("delete");
   deleteBtn.addEventListener("click", function () {
     itemContainer.remove();
   });
-
-  // Lägger till input fält och knappar till container
+  // Lägger till input fält och knappar till container, rad 76 lägger till i listan.
   itemContainer.appendChild(choreInput);
   itemContainer.appendChild(editBtn);
   itemContainer.appendChild(doneBtn);
   itemContainer.appendChild(deleteBtn);
-
-  // Lägger till i "Att göra" Listan
   document.getElementById("todoList").appendChild(itemContainer);
 }
