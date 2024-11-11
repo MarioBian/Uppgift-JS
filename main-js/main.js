@@ -7,7 +7,7 @@ document.getElementById("restore").addEventListener("click", function () {
     "Listan är nu återställd, bra jobbat med dina sysslor 💪.";
 });
 
-// denna är för "Spara" knappen, den lägger till en ny syssla vid tryck.
+// denna sparar
 document.getElementById("saveBtn").addEventListener("click", function () {
   let chore = document.getElementById("List").value;
   let alertmessege = document.getElementById("alertmessege");
